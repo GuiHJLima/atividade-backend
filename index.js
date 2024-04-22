@@ -83,7 +83,7 @@ app.get('/usuarios/:id', async (req, res) => {
 });
 
 //criar uma rota que adcione um novo usuario
-app.post('/usuario', async (req, res) => {
+app.post('/usuarios', async (req, res) => {
     try {
         const { name, surname, date_of_birth, email, sex, status} = req.body;
 
@@ -91,36 +91,11 @@ app.post('/usuario', async (req, res) => {
         const idade = calcularIdade(dataNascimento);
         const signo = calcularSigno(dataNascimento.getMonth() + 1, dataNascimento.getDate());
 
-        await pool.query('INSERT INTO usuarios (name, surname, date_of_birth, email, age, sing, sex, status) VALUES ($1, $2, $3, $4, $5, $6, $7)', [name, surname, dataNascimento, email, idade, signo, sex, status]);
-        res.send(201)({ mensagem: "Usuario adicionado com sucesso" });
+        await pool.query('INSERT INTO usuarios (name, surname, date_of_birth, email, age, sing, sex, status) VALUES ($1, $2, $3, $4, $5, $6, $7);', [name, surname, dataNascimento, email, idade, signo, sex, status]);
+        res.status(201).send({ mensagem: "Usuario adicionado com sucesso" });
     } catch (error) {
         console.error("Erro ao tentar adicionar um novo usuario", error);
         res.status(500).send({ mensagem: "Erro ao tentar adicionar um novo usuario" });
-    }
-});
-
-//criar uma rota que delete um usuario]
-app.delete('/usuario/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        await pool.query('DELETE FROM usuario WHERE id = $1', [id]);
-        res.send({ mensagem: "Usuario deletado com sucesso" });
-    } catch (error) {
-        console.error("Erro ao tentar deletar um usuario");
-        res.status(500).send({ mensagem: "Erro ao tentar deletar um usuario" });
-    }
-});
-
-//criar uma rota que atualize um usuario
-app.put('/usuario/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { nome, email } = req.body;
-        await pool.query('UPDATE usuario SET nome = $1, email = $2 WHERE id = $3', [nome, email, id]);
-        res.send({ mensagem: "Usuario atualizado com sucesso" });
-    } catch (error) {
-        console.error("Erro ao tentar atualizar um usuario");
-        res.status(500).send({ mensagem: "Erro ao tentar atualizar um usuario" });
     }
 });
 
