@@ -1,15 +1,21 @@
 -- Criação do banco de dados
-CREATE DATABASE limaaulabacktds2;
+CREATE DATABASE usuariosdolima;
 
 -- Conecta no banco de dados
-\c limaaulabacktds2;
+\c usuariosdolima;
 
--- Criação da tabela 'usuario'
-CREATE TABLE usuario (
+-- Criação da tabela '
+CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL,
+    surname VARCHAR(100) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    age INT NOT NULL,
+    sing VARCHAR(100) NOT NULL,
+    sex VARCHAR(1) NOT NULL,
+    status BOOLEAN NOT NULL
 );
 
--- inserção de dados na tabela 'usuario'
-INSERT INTO usuario (nome, email) VALUES ('Lima', 'lima@gmail.com');
+-- inserção de dados na tabela 'usuarios'
+INSERT INTO usuarios (name, email) VALUES ('Lima', 'lima@gmail.com');
