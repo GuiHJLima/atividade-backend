@@ -54,9 +54,9 @@ function calcularSigno(mes, dia) {
 
 
 //criar uma rota que obtem todos os usuarios
-app.get('/usuario', async (req, res) => {
+app.get('/usuarios', async (req, res) => {
     try {
-        const resultado = await pool.query('SELECT * FROM usuario');
+        const resultado = await pool.query('SELECT * FROM usuarios');
         res.json({
             total: resultado.rowCount,
             usuarios: resultado.rows
@@ -68,10 +68,10 @@ app.get('/usuario', async (req, res) => {
 });
 
 //criar uma rota que obtem um usuario pelo id
-app.get('/usuario/:id', async (req, res) => {
+app.get('/usuarios/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const resultado = await pool.query('SELECT * FROM usuario WHERE id = $1', [id]);
+        const resultado = await pool.query('SELECT * FROM usuarios WHERE id = $1', [id]);
         res.json({
             total: resultado.rowCount,
             usuario: resultado.rows[0]
@@ -85,8 +85,13 @@ app.get('/usuario/:id', async (req, res) => {
 //criar uma rota que adcione um novo usuario
 app.post('/usuario', async (req, res) => {
     try {
-        const { nome, email } = req.body;
-        await pool.query('INSERT INTO usuario (nome, email) VALUES ($1, $2)', [nome, email]);
+        const { name, surname, date_of_birth, email, sex, status} = req.body;
+
+        const dataNascimento = new Date(date_of_birth);
+        const idade = calcularIdade(dataNascimento);
+        const signo = calcularSigno(dataNascimento.getMonth() + 1, dataNascimento.getDate());
+
+        await pool.query('INSERT INTO usuarios (name, surname, date_of_birth, email, age, sing, sex, status) VALUES ($1, $2, $3, $4, $5, $6, $7)', [name, surname, dataNascimento, email, idade, signo, sex, status]);
         res.send(201)({ mensagem: "Usuario adicionado com sucesso" });
     } catch (error) {
         console.error("Erro ao tentar adicionar um novo usuario", error);
