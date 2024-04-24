@@ -13,7 +13,7 @@ const pool = new Pool({
     host: 'localhost',
     database: 'usuariosdolima',
     password: 'ds564',
-    port: 5432,
+    port: 7007,
 });
 
 //função para calcular a idade

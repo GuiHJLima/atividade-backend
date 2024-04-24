@@ -16,3 +16,7 @@ CREATE TABLE usuarios (
     sex VARCHAR(1) NOT NULL,
     status BOOLEAN NOT NULL
 );
+
+-- Inserção de dados
+INSERT INTO usuarios (name, surname, date_of_birth, email, age, sing, sex, status) VALUES
+('Guilherme', 'Lima', '2006-10-13', 'lima@gmail.com', 16, 'Libra', 'M', true);
