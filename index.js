@@ -1,7 +1,9 @@
 const express = require('express');
 const { Pool } = require('pg');
-
 const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const port = 4000;
 
@@ -73,7 +75,6 @@ app.get('/usuarios/:id', async (req, res) => {
         const { id } = req.params;
         const resultado = await pool.query('SELECT * FROM usuarios WHERE id = $1', [id]);
         res.json({
-            total: resultado.rowCount,
             usuario: resultado.rows[0]
         });
     } catch (error) {
@@ -91,7 +92,7 @@ app.post('/usuarios', async (req, res) => {
         const idade = calcularIdade(dataNascimento);
         const signo = calcularSigno(dataNascimento.getMonth() + 1, dataNascimento.getDate());
 
-        await pool.query('INSERT INTO usuarios (name, surname, date_of_birth, email, age, sing, sex, status) VALUES ($1, $2, $3, $4, $5, $6, $7);', [name, surname, dataNascimento, email, idade, signo, sex, status]);
+        await pool.query('INSERT INTO usuarios (name, surname, date_of_birth, email, age, sing, sex, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);', [name, surname, dataNascimento, email, idade, signo, sex, status]);
         res.status(201).send({ mensagem: "Usuario adicionado com sucesso" });
     } catch (error) {
         console.error("Erro ao tentar adicionar um novo usuario", error);
@@ -109,7 +110,7 @@ app.put('/usuarios/:id', async (req, res) => {
         const idade = calcularIdade(dataNascimento);
         const signo = calcularSigno(dataNascimento.getMonth() + 1, dataNascimento.getDate());
 
-        await pool.query('UPDATE usuarios SET name = $1, surname = $2, date_of_birth = $3, email = $4, age = $5, sing = $5, sex = $6, status = $7 WHERE id = $8;', [name, surname, dataNascimento, email, idade, signo, sex, status, id]);
+        await pool.query('UPDATE usuarios SET name = $1, surname = $2, date_of_birth = $3, email = $4, age = $5, sing = $6, sex = $7, status = $8 WHERE id = $9;', [name, surname, dataNascimento, email, idade, signo, sex, status, id]);
         res.status(200).send({ mensagem: "Usuario atualizado com sucesso" });
     } catch (error) {
         console.error("Erro ao tentar atualizar um usuario pelo id", error);
