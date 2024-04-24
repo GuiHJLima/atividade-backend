@@ -99,6 +99,35 @@ app.post('/usuarios', async (req, res) => {
     }
 });
 
+//criar uma rota que atualize um usuario pelo id
+app.put('/usuarios/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, surname, date_of_birth, email, sex, status } = req.body;
+        
+        const dataNascimento = new Date(date_of_birth);
+        const idade = calcularIdade(dataNascimento);
+        const signo = calcularSigno(dataNascimento.getMonth() + 1, dataNascimento.getDate());
+
+        await pool.query('UPDATE usuarios SET name = $1, surname = $2, date_of_birth = $3, email = $4, age = $5, sing = $5, sex = $6, status = $7 WHERE id = $8;', [name, surname, dataNascimento, email, idade, signo, sex, status, id]);
+        res.status(200).send({ mensagem: "Usuario atualizado com sucesso" });
+    } catch (error) {
+        console.error("Erro ao tentar atualizar um usuario pelo id", error);
+        res.status(500).send({ mensagem: "Erro ao tentar atualizar um usuario pelo id" });
+    }
+});
+
+//criar uma rota que delete um usuario pelo id
+app.delete('/usuarios/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await pool.query('DELETE FROM usuarios WHERE id = $1;', [id]);
+        res.status(200).send({ mensagem: "Usuario deletado com sucesso" });
+    } catch (error) {
+        console.error("Erro ao tentar deletar um usuario pelo id", error);
+        res.status(500).send({ mensagem: "Erro ao tentar deletar um usuario pelo id" });
+    }
+});
 
 
 //inicializar o servidor
